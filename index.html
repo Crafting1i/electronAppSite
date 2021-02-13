@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="import" href="pages/main.html">
+    <link rel="import" href="pages/other/about.html">
+</head>
+<body>
+    <nav class="nav js-nav">
+        <div class="nav-item u-category-windows">
+            <button type="radio" id="button-windows" data-section="about" class="nav-button">На <em>описание</em></button>
+        </div>
+    </nav>
+    <main class="content"></main>
+    <script>
+        require('./assets/imports')
+        require('./assets/nav')
+    </script>
+</body>
+</html>
