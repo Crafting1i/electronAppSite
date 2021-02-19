@@ -1,0 +1,9 @@
+<template class="task-template section home home-section">
+    <div v-if="section == 'home'">
+        <h1>{{ greeeting }}</h1>
+        <input type="text" v-model="greeeting">
+        <button v-on:click="setPage('about')" class="section-button">На <em>описание</em></button>
+        <input type="text" v-model="dialogText">
+        <button v-on:click="dialogMsg()">Диалоговое окно</button>
+    </div>
+</template>

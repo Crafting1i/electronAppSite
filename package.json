@@ -1,8 +1,8 @@
 {
-  "name": "my_shit",
-  "productName": "My shit wibdow",
-  "version": "2.0.2",
-  "description": "I don't know",
+  "name": "electron-vue_project",
+  "productName": "Electron + Vue",
+  "version": "1.0.0",
+  "description": "Just Vue with Electron JSs",
   "main": "main.js",
   "bin": "cli.js",
   "scripts": {

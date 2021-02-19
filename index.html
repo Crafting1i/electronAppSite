@@ -1,21 +1,57 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
 
-    <link rel="import" href="./pages/main.html">
-    <link rel="import" href="./pages/other/about.html">
+    <link rel="import" href="./sections/main.html">
+    <link rel="import" href="./sections/other/about.html">
+
+    <link type="text/css" rel="stylesheet" href="./assets/css/index.css">
 </head>
+
 <body>
-    <nav class="nav js-nav">
-        <div class="nav-item u-category-windows">
-            <button type="radio" id="button-windows" data-section="about" class="nav-button">На <em>описание</em></button>
-        </div>
-    </nav>
-    <main class="content js-conten"></main>
-    <script>
-        require('./assets/imports')
-        require('./assets/nav')
-    </script>
+    <div id="vue">
+        <main class="content js-content"></main>
+    </div>
 </body>
+<script>
+    require('./assets/imports')
+</script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+    function messageDialog() {
+    let { dialog } = require('electron')
+    let buttons = ['Ok', 'No', 'Maybe'];
+    dialog.showMessageBox({
+        buttons: buttons,
+        title: 'Electron Message Dialog',
+        message: 'Please select an answer',
+        detail: 'A more descriptive message with some details',
+    }, (buttonIndex) => {
+        console.log('User selected: ' + buttons[buttonIndex]) // Получим ответ из диалога
+    })
+}
+    new Vue({
+        el: '#vue',
+        data: {
+            greeeting: 'Hello, it is a I\'M Project!',
+            message: 'This is',
+            section: 'home',
+            dialogText: 'Empty message'
+        },
+        methods: {
+            setPage(sectionName) {
+                this.section = sectionName
+            }
+        },
+        computed: {
+            dialogMsg() {
+                messageDialog()
+            },
+        }
+    })
+</script>
+
 </html>
