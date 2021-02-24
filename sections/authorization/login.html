@@ -1,0 +1,11 @@
+<template class="task-template">
+    <div v-if="section == 'login'">
+        <div class="login">
+            <input type="email" class="email-input">
+            <input type="password" class="password-input">
+        </div>
+        <button v-on:click="login()" class="login">Войти</button>
+        <hr>
+        <button v-on:click="setPage('reg')">Регистрация</button><button v-on:click="setPage('home')">Войти без аккаунта</button>
+    </div>
+</template>

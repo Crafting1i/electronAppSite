@@ -4,8 +4,10 @@
 <head>
     <meta charset="UTF-8">
 
-    <link rel="import" href="./sections/main.html">
-    <link rel="import" href="./sections/other/about.html">
+    <link rel="import" href="./sections/appSections/main.html">
+    <link rel="import" href="./sections/appSections/about.html">
+    <link rel="import" href="./sections/authorization/login.html">
+    <link rel="import" href="./sections/authorization/registration.html">
 
     <link type="text/css" rel="stylesheet" href="./assets/css/index.css">
 </head>
@@ -15,41 +17,104 @@
         <main class="content js-content"></main>
     </div>
 </body>
-<script>
-    require('./assets/imports')
-</script>
-<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script>
-    function messageDialog() {
-    let { dialog } = require('electron')
-    let buttons = ['Ok', 'No', 'Maybe'];
-    dialog.showMessageBox({
-        buttons: buttons,
-        title: 'Electron Message Dialog',
-        message: 'Please select an answer',
-        detail: 'A more descriptive message with some details',
-    }, (buttonIndex) => {
-        console.log('User selected: ' + buttons[buttonIndex]) // Получим ответ из диалога
-    })
-}
-    new Vue({
+    require('./assets/imports')
+    // require('./render-process/render')
+</script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script> -->
+<script type="text/javascript">
+    Array.prototype.last = function () {
+        return this.length - 1
+    }
+    Array.prototype.lastName = function () {
+        return this[this.last()]
+    }
+    let vm = new Vue({
         el: '#vue',
         data: {
             greeeting: 'Hello, it is a I\'M Project!',
             message: 'This is',
-            section: 'home',
-            dialogText: 'Empty message'
+            section: 'login',
+            prevSections: [],
+            nextSections: [],
+            dialogText: 'Empty message',
+            emaill: '',
+            password: '',
         },
         methods: {
             setPage(sectionName) {
+                if (this.section == sectionName) return;
+                if (this.prevSections.length >= 20) {
+                    this.prevSections.shift()
+                    this.prevSections.push(this.section)
+                } else {
+                    this.prevSections.push(this.section)
+                }
                 this.section = sectionName
-            }
+            },
+            dialogMsg() {
+                let dialog = require('electron').remote.dialog
+                console.log(dialog);
+                let buttons = ['Ok'];
+                dialog.showMessageBox({
+                    buttons: buttons,
+                    title: 'Electron Message Dialog',
+                    message: this.dialogText,
+                    detail: 'A more descriptive message with some details',
+                }, (buttonIndex) => {
+                    console.log('User selected: ' + buttons[buttonIndex]) // Получим ответ из диалога
+                })
+            },
+            login() {
+                return
+            },
         },
         computed: {
-            dialogMsg() {
-                messageDialog()
-            },
+            session: {},
+        }
+    })
+    document.addEventListener('mousedown', event => {
+        switch (event.button) {
+            case 3: //Назад
+                if (vm.prevSections.length == 0 || vm.prevSections.lastName() == vm.section) return;
+                vm.nextSections.push(vm.section)
+                vm.section = vm.prevSections.lastName()
+                vm.prevSections.pop()
+                break
+            case 4: //Вперёд
+                if (vm.nextSections.length == 0 || vm.nextSections.lastName() == vm.section) return;
+                if (vm.prevSections.length >= 20) {
+                    vm.prevSections.shift()
+                    vm.prevSections.push(vm.section)
+                } else {
+                    vm.prevSections.push(vm.section)
+                }
+                vm.section = vm.nextSections.lastName()
+                vm.nextSections.pop()
+                break
+        }
+    })
+    document.addEventListener('keydown', event => {
+        if (!event.altKey) return;
+        switch (event.key) {
+            case 'ArrowLeft': //Назад
+                if (vm.prevSections.length == 0 || vm.prevSections.lastName() == vm.section) return;
+                vm.nextSections.push(vm.section)
+                vm.section = vm.prevSections.lastName()
+                vm.prevSections.pop()
+                break
+            case 'ArrowRight': //Вперёд
+                if (vm.nextSections.length == 0 || vm.nextSections.lastName() == vm.section) return;
+                if (vm.prevSections.length >= 20) {
+                    vm.prevSections.shift()
+                    vm.prevSections.push(vm.section)
+                } else {
+                    vm.prevSections.push(vm.section)
+                }
+                vm.section = vm.nextSections.lastName()
+                vm.nextSections.pop()
+                break
         }
     })
 </script>

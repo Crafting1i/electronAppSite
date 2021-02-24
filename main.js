@@ -44,18 +44,18 @@ function initialize() {
         // }
         // dialog.showMessageBox(BrowserWindow, options, function () {})
 
-        function messageDialog() {
-            let buttons = ['Ok', 'No', 'Maybe'];
-            dialog.showMessageBox({
-                buttons: buttons,
-                title: 'Electron Message Dialog',
-                message: 'Please select an answer',
-                detail: 'A more descriptive message with some details',
-            }, (buttonIndex) => {
-                console.log('User selected: ' + buttons[buttonIndex]) // Получим ответ из диалога
-            })
-        }
-        messageDialog()
+        // function messageDialog() {
+        //     let buttons = ['Ok', 'No', 'Maybe'];
+        //     dialog.showMessageBox({
+        //         buttons: buttons,
+        //         title: 'Electron Message Dialog',
+        //         message: 'Please select an answer',
+        //         detail: 'A more descriptive message with some details',
+        //     }, (buttonIndex) => {
+        //         console.log('User selected: ' + buttons[buttonIndex]) // Получим ответ из диалога
+        //     })
+        // }
+        // messageDialog()
 
 
         // Launch fullscreen with DevTools open, usage: npm run debug
