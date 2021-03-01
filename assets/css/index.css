@@ -1,0 +1,26 @@
+body {
+    background-color: #c7eb00;
+}
+button {
+    background-color: #91AB00;
+    color: #053c7a;
+    height: 4vh;
+    font-size: 2vh;
+    margin: 0.3vw;
+    border: 0.07vw solid #677900;
+    border-radius: 6px;
+}
+div.login {
+    text-align: center;
+    margin-top: 30vh;
+}
+button.login {
+    margin-top: 2vh;
+}
+input {
+    height: 3vh;
+    font-size: 2vh;
+}
+input.login {
+    margin-top: 0.65vh;
+}

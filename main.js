@@ -1,3 +1,9 @@
+/**
+* Created by
+* @author Crafting1i [Mona Megistus]
+* @author Mikun Hatsune
+*/
+
 require('update-electron-app')({
     logger: require('electron-log')
 })
@@ -62,7 +68,6 @@ function initialize() {
         if (debug) {
             mainWindow.webContents.openDevTools()
             mainWindow.maximize()
-            require('devtron').install()
         }
 
         mainWindow.on('closed', () => {

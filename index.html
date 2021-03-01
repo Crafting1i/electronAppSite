@@ -8,6 +8,7 @@
     <link rel="import" href="./sections/appSections/about.html">
     <link rel="import" href="./sections/authorization/login.html">
     <link rel="import" href="./sections/authorization/registration.html">
+    <link rel="import" href="./sections/toSchool/background.html">
 
     <link type="text/css" rel="stylesheet" href="./assets/css/index.css">
 </head>
@@ -17,19 +18,14 @@
         <main class="content js-content"></main>
     </div>
 </body>
+<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script>
     require('./assets/imports')
-    // require('./render-process/render')
+    require('./assets/scripts')
 </script>
-<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script> -->
 <script type="text/javascript">
-    Array.prototype.last = function () {
-        return this.length - 1
-    }
-    Array.prototype.lastName = function () {
-        return this[this.last()]
-    }
+    let electron = require('electron')
     let vm = new Vue({
         el: '#vue',
         data: {
@@ -41,6 +37,7 @@
             dialogText: 'Empty message',
             emaill: '',
             password: '',
+            backgroundColor: '#C7EB00'
         },
         methods: {
             setPage(sectionName) {
@@ -54,8 +51,7 @@
                 this.section = sectionName
             },
             dialogMsg() {
-                let dialog = require('electron').remote.dialog
-                console.log(dialog);
+                let dialog = electron.remote.dialog
                 let buttons = ['Ok'];
                 dialog.showMessageBox({
                     buttons: buttons,
@@ -69,54 +65,20 @@
             login() {
                 return
             },
+            registration() {
+                return
+            },
+            setBackground() {
+                let background = document.querySelector('input.background').value
+                background = (/#?([a-f0-9]{6}|[a-f0-9]{3})/i.exec(background)[0] === background) ? background : this.backgroundColor
+
+                let body = document.querySelector('body')
+                body.style = `background: ${background}`
+            }
         },
         computed: {
             session: {},
         }
     })
-    document.addEventListener('mousedown', event => {
-        switch (event.button) {
-            case 3: //Назад
-                if (vm.prevSections.length == 0 || vm.prevSections.lastName() == vm.section) return;
-                vm.nextSections.push(vm.section)
-                vm.section = vm.prevSections.lastName()
-                vm.prevSections.pop()
-                break
-            case 4: //Вперёд
-                if (vm.nextSections.length == 0 || vm.nextSections.lastName() == vm.section) return;
-                if (vm.prevSections.length >= 20) {
-                    vm.prevSections.shift()
-                    vm.prevSections.push(vm.section)
-                } else {
-                    vm.prevSections.push(vm.section)
-                }
-                vm.section = vm.nextSections.lastName()
-                vm.nextSections.pop()
-                break
-        }
-    })
-    document.addEventListener('keydown', event => {
-        if (!event.altKey) return;
-        switch (event.key) {
-            case 'ArrowLeft': //Назад
-                if (vm.prevSections.length == 0 || vm.prevSections.lastName() == vm.section) return;
-                vm.nextSections.push(vm.section)
-                vm.section = vm.prevSections.lastName()
-                vm.prevSections.pop()
-                break
-            case 'ArrowRight': //Вперёд
-                if (vm.nextSections.length == 0 || vm.nextSections.lastName() == vm.section) return;
-                if (vm.prevSections.length >= 20) {
-                    vm.prevSections.shift()
-                    vm.prevSections.push(vm.section)
-                } else {
-                    vm.prevSections.push(vm.section)
-                }
-                vm.section = vm.nextSections.lastName()
-                vm.nextSections.pop()
-                break
-        }
-    })
 </script>
-
 </html>
