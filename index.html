@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
 
@@ -12,20 +11,21 @@
 
     <link type="text/css" rel="stylesheet" href="./assets/css/index.css">
 </head>
-
 <body>
-    <div id="vue">
-        <main class="content js-content"></main>
-    </div>
+    <main id="vue" class="content js-content"></main>
 </body>
+
 <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script>
     require('./assets/imports')
     require('./assets/scripts')
+    const bcrypt = require('bcrypt')
+    const fs = require('fs')
+    let accounts = require('./assets/DataBAse/accounts')
+    let electron = require('electron')
 </script>
 <script type="text/javascript">
-    let electron = require('electron')
     let vm = new Vue({
         el: '#vue',
         data: {
@@ -35,8 +35,7 @@
             prevSections: [],
             nextSections: [],
             dialogText: 'Empty message',
-            emaill: '',
-            password: '',
+            sessionKey: '',
             backgroundColor: '#C7EB00'
         },
         methods: {
@@ -62,11 +61,70 @@
                     console.log('User selected: ' + buttons[buttonIndex]) // Получим ответ из диалога
                 })
             },
-            login() {
-                return
+            async login() {
+                //Скрытие оставшихся элементов
+                document.querySelector('div.login div.inputs p.error.email').classList.add('hide')
+                document.querySelector('div.login div.inputs p.error.password').classList.add('hide')
+                document.querySelector('div.login div.inputs input.email').classList.remove('error')
+                document.querySelector('div.login div.inputs input.password').classList.remove('error')
+                
+                const email = document.querySelector('div.login div.inputs input.email').value
+                const password = document.querySelector('div.login div.inputs input.password').value
+                console.log(password);
+                //Проверка, заполнены ли поля
+                if (!email || !password) {
+                    if (email == '') document.querySelector('div.login div.inputs input.email').classList.add('error')
+                    if (password == '') document.querySelector('div.login div.inputs input.password').classList.add('error')
+                    return
+                }
+                
+                //Сбор и подтверждение данных
+                const account = await accounts.findOne({ email: { $exists: true, $eq: email }})
+                if (account) {
+                    const correctPassword = bcrypt.compareSync(password, account.password) 
+                    if (correctPassword) {
+                        let config = require('./assets/config/config.json')
+                        config.session = { key: account.password, options: { username: password.username || `Noname` } }
+                        console.log(this.session, config);
+                        fs.writeFile('./assets/config/config.json', JSON.parse(JSON.stringify(config)))
+                        this.section = 'home'
+                    } else {
+                        let element = document.querySelector('div.login div.inputs p.error.password')
+                        element.classList.remove('hide')
+                    }
+                } else {
+                    let element = document.querySelector('div.login div.inputs p.error.email')
+                    element.classList.remove('hide')
+                }
             },
-            registration() {
-                return
+            async registration() {
+                let email = document.querySelector('div.registration div.inputs input.email').value
+                let password = document.querySelector('div.registration div.inputs input.password').value
+                //Если одно из полей пустое
+                if (!email || !password) return
+
+                //Хэширование пароля
+                password = bcrypt.hashSync(password, 10)
+                //Поиск аккаунта
+                let tryAccount = await accounts.findOne({ email: email })
+                //Если аккаунт не зарегестрирован
+                if (!tryAccount) {
+                    try {
+                        let newAccount = new accounts({
+                            email: email,
+                            password: password
+                        })
+                        newAccount.save()
+                        this.section = 'login'
+                    } catch (err) {
+                        console.error(err);
+                    }
+                } else {
+                    let element = document.querySelector('div.registration div.inputs p')
+                    element.classList.remove('hide')
+                }
+                //Скрытие оставшихся элементов
+                document.querySelector('div.registration div.inputs p').classList.remove('hide')
             },
             setBackground() {
                 let background = document.querySelector('input.background').value
@@ -77,7 +135,7 @@
             }
         },
         computed: {
-            session: {},
+            session: require('./assets/config/config.json').session,
         }
     })
 </script>

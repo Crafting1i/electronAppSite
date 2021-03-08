@@ -4,7 +4,7 @@
 * @author Mikun Hatsune
 * Thanks for using!
 */
-
+const { DBUrl } = require('./config/config.json')
 //Последний элемент массива
 Array.prototype.last = function () {
     return this.length - 1
@@ -63,3 +63,19 @@ document.addEventListener('keydown', event => {
             break
     }
 })
+//Подключение базы данных
+const mongoose = require('mongoose');
+
+async function start() {
+    try {
+        await mongoose.connect(DBUrl, {
+            useUnifiedTopology: true,
+            useNewUrlParser: true,
+            useFindAndModify: false
+        })
+        console.log(`[SUCCEFULL] DateBase has been connected!`);
+    } catch (error) {
+        console.error(error);
+    }
+}
+start();

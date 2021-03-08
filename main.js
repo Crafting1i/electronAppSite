@@ -10,7 +10,7 @@ require('update-electron-app')({
 
 const path = require('path')
 const glob = require('glob')
-const { app, BrowserWindow, dialog } = require('electron')
+const { app, BrowserWindow, dialog, session } = require('electron')
 
 
 const debug = /--debug/.test(process.argv[2])

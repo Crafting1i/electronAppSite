@@ -24,3 +24,9 @@ input {
 input.login {
     margin-top: 0.65vh;
 }
+* {
+    font-family:  Sans, sans-serif;
+}
+.hide {
+    display: none;
+}

@@ -3,7 +3,9 @@
         <div class="login">
             <div class="inputs">
                 <br><input type="email" class="login email input">
+                <br><p class="error email hide">Учётной записи с такими данными не существует</p>
                 <br><input type="password" class="login password input">
+                <br><p class="error password hide">Не верный пароль</p>
             </div>
             <button v-on:click="login()" class="login">Войти</button>
             <hr>
